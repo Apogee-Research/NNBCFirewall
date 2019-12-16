@@ -1,0 +1,20 @@
+
+[Unit]
+Description=The NGINX instance forwarding http content from port 80 to 8000
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/usr/local/nginx-nnbc/logs/nginx.pid
+ExecStartPre=/usr/local/nginx-nnbc/sbin/nginx -t -c /usr/local/nginx-nnbc/conf/nginx.conf -q
+ExecStart=/usr/local/nginx-nnbc/sbin/nginx -c /usr/local/nginx-nnbc/conf/nginx.conf -q
+ExecReload=/usr/local/nginx-nnbc/sbin/nginx -c /usr/local/nginx-nnbc/conf/nginx.conf -s reload
+ExecStop=-/sbin/start-stop-daemon --quiet --stop --retry QUIT/5 --pidfile /usr/local/nginx-nnbc/logs/nginx.pid
+TimeoutStopSec=5
+KillMode=mixed
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+

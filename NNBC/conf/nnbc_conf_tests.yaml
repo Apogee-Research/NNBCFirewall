@@ -1,0 +1,64 @@
+# Output files
+logfile: "/tmp/nnbc.log"
+dump_log: "/tmp/nnbc_gnuplot.dat"
+verbose: 1
+
+whitelist: 127.0.0.0/8,192.168.1.22/32
+proxylist: 127.0.1.0/24,192.168.0.0/12
+
+# The sensor cmd can be anything that returns 0 on success and non-zero on failure. It should take less time to execute than the sensor_poll value. It can include an optional %ld -- if present, the NNBC will fill in a unique string of numbers on each sensor invocation.
+sensor_cmd: "/bin/true"
+sensor_poll: 2  # how often (seconds) the NNBC performs a sensor iteration
+
+t1_access_multiplier: 1.0  # how much a client's Tier 1 score falls per access during an attack
+t2_initial_access_multiplier: 0.1  # same as T1, except this is just the initial value. Tier 2 access multipliers may increase over time according to client behaviour (exponential block feature).
+t1_misbehave_multiplier: 1.0  # how much a client's Tier 1 score falls per misbehave invocation
+
+# Determines pace of forgiveness/decay (multiplicative -- closer to 1 means slower decay)
+t1_reduction_factor: 0.999
+t2_reduction_factor: 0.9999
+
+# Epsilon values affect initial scores of clients in relation to the threshold
+t1_epsilon: 9.9
+t1_attack_epsilon: -0.05
+t2_epsilon: 4.9
+t2_attack_epsilon: 4.9
+
+# Database Connection Credentials
+database:
+    dbname: "nnbcdb"
+    user: "nnbc_user"
+    password: "nnbc_pass"
+
+# Redis Channel Names
+under_attack_channel: "under_attack"
+t1_threshold_channel: "t1_threshold"
+t2_threshold_channel: "t2_threshold"
+
+# Threshold constraints imposed by the NNBC onto Threshold Controllers
+t1_max_distance_below: 10.0
+t2_max_distance_below: 5.0
+
+# Configuration for Tier 1 Threshold Controller
+t1_threshold_controller:
+    initial_threshold: -10.0
+    setpoint: 0.8
+    sensor_smoothing_alpha: 0.1
+    K: 30.0
+    tau_i: 60.0
+    tau_t: 0.05
+
+# Configuration for Tier 1 Threshold Controller
+t2_threshold_controller:
+    initial_threshold: -5.0
+    setpoint: 0.9
+    sensor_smoothing_alpha: 0.01
+    K: 5.0
+    tau_i: 240.0
+    tau_t: 0.005
+
+# Blacklist configuration (null disables blacklist)
+blacklist:
+    target: "http://akamai:5000"
+    blacklist_uid: "blacklist"
+    frequency: 60

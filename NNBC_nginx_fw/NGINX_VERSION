@@ -1,0 +1,9 @@
+1.12.2
+
+Change the top line to change which version of nginx is used by the
+NNBC firewall. Scripts obtain the version via `head -1 VERSION`, so:
+  1. Make sure the version is on the top line.
+  2. Make sure there are no other characters on the top line, like
+     spaces or tabs.
+  3. You can put notes anywhere else in this file.
+
